@@ -1,77 +1,66 @@
 package br.com.erudio.controllers;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.erudio.logic.MathLogic;
+import br.com.erudio.model.Person;
+import br.com.erudio.services.PersonServices;
 
 @RestController
-public class MathController {
+@RequestMapping("/person")
+public class PersonController {
 	
-	private final AtomicLong counter = new AtomicLong();
+	@Autowired // Essa anotação realiza a instanciação de forma dinamica sendo dependente da anotação @service.
+	private PersonServices service;
 	
-	@RequestMapping(value = "/sum/{numberOne}/{numberTwo}",
-			method=RequestMethod.GET)
-	public Double sum(
-			@PathVariable(value = "numberOne") String numberOne,
-			@PathVariable(value = "numberTwo") String numberTwo
-			) throws Exception{
+	@GetMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Person> findAll() {
 		
-		return new MathLogic().sum(numberOne, numberTwo);
+		return service.findAll();
 	}
 	
-	@RequestMapping(value = "/subtraction/{numberOne}/{numberTwo}",
-			method=RequestMethod.GET)
-	public Double subtraction(
-			@PathVariable(value = "numberOne") String numberOne,
-			@PathVariable(value = "numberTwo") String numberTwo
-			) throws Exception {
-	
-		return new MathLogic().subtraction(numberOne, numberTwo);
-	}
-	
-	@RequestMapping(value = "/multiplication/{numberOne}/{numberTwo}",
-			method=RequestMethod.GET)
-	public Double multiplication(
-			@PathVariable(value = "numberOne") String numberOne,
-			@PathVariable(value = "numberTwo") String numberTwo
-			) throws Exception {
+	@GetMapping(value = "/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+	public Person findById(
+			@PathVariable(value = "id") Long id) throws Exception{
 		
-		return new MathLogic().multiplication(numberOne, numberTwo);
+		return service.findById(id);
 	}
 	
-	@RequestMapping(value = "/division/{numberOne}/{numberTwo}",
-			method=RequestMethod.GET)
-	public Double division(
-			@PathVariable(value = "numberOne") String numberOne,
-			@PathVariable(value = "numberTwo") String numberTwo
-			) throws Exception {
+	@PostMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+	public Person create(@RequestBody Person person) {
 		
-		return new MathLogic().division(numberOne, numberTwo);
+		return service.create(person);
 	}
 	
-	@RequestMapping(value = "/mean/{numberOne}/{numberTwo}",
-			method=RequestMethod.GET)
-	public Double mean(
-			@PathVariable(value = "numberOne") String numberOne,
-			@PathVariable(value = "numberTwo") String numberTwo
-			) throws Exception {
+	@PutMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+	public Person update(@RequestBody Person person) {
 		
-		return new MathLogic().mean(numberOne, numberTwo);
+		return service.update(person);
 	}
 	
-	@RequestMapping(value = "/squareRoot/{number}",
-			method=RequestMethod.GET)
-	public Double squareRoot(
-			@PathVariable(value = "number") String number
-			) throws Exception {
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> delete(
+			@PathVariable(value = "id") Long id) {
 		
-		return new MathLogic().squareRoot(number);
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+		
 	}
-
-	
 }
