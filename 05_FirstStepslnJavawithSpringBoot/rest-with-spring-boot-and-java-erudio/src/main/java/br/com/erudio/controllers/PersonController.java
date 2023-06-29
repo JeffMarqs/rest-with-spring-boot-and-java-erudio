@@ -19,7 +19,7 @@ import br.com.erudio.data.vo.v2.PersonVOV2;
 import br.com.erudio.services.PersonServices;
 
 @RestController
-@RequestMapping("/person")
+@RequestMapping("/api/person/v1")
 public class PersonController {
 	
 	@Autowired // Essa anotação realiza a instanciação de forma dinamica sendo dependente da anotação @service.
@@ -35,7 +35,7 @@ public class PersonController {
 	@GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
 	public PersonVO findById(
-			@PathVariable(value = "id") Long id){
+			@PathVariable(value = "id") Long id){ // @PathVariable vincula o value que está na URI ao parametro do método.
 		
 		return service.findById(id);
 	}
@@ -43,7 +43,7 @@ public class PersonController {
 	@PostMapping(
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public PersonVO create(@RequestBody PersonVO person) {
+	public PersonVO create(@RequestBody PersonVO person) { //@RequestBody O parametro do metodo deverá ser vinculado ao body. 
 		
 		return service.create(person);
 	}
